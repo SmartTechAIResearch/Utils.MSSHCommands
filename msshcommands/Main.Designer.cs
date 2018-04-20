@@ -186,6 +186,7 @@
             // 
             // nudPort
             // 
+            this.nudPort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.nudPort.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::msshcommands.Properties.Settings.Default, "Port", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.nudPort.Location = new System.Drawing.Point(44, 187);
             this.nudPort.Maximum = new decimal(new int[] {
@@ -254,6 +255,7 @@
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
             this.txtLog.ReadOnly = true;
+            this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtLog.Size = new System.Drawing.Size(750, 58);
             this.txtLog.TabIndex = 16;
             this.txtLog.TabStop = false;

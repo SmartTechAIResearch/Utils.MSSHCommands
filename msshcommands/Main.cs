@@ -1,22 +1,34 @@
-﻿using Renci.SshNet;
+﻿/*
+    Dieter Vandroemme
+    2018
+    MIT License
+
+    A small tool to send a ssh command to multiple devices at the same time.
+
+ */
+
+using Renci.SshNet;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace msshcommands {
+    /// <summary>
+    /// A small tool to send a ssh command to multiple devices at the same time.
+    /// </summary>
+    /// <seealso cref="System.Windows.Forms.Form" />
     public partial class Main : Form {
         private string _regexIPv4 = "((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
         private SynchronizationContext _synchronizationContext;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Main"/> class.
+        /// </summary>
         public Main() {
             InitializeComponent();
             if (this.IsHandleCreated) {
@@ -65,12 +77,12 @@ namespace msshcommands {
                     }
                 }
                 catch {
-                    txtLog.Text += "Failed loading private key fail. Falling back on password.\n";
+                    Log("Failed loading private key fail. Falling back on password.");
                 }
             }
 
             if (txtIPsHosts.Text.Trim().Length == 0 || user.Length == 0 || command.Length == 0) {
-                txtLog.Text += "Cannot send a command if not all fields are filled in.\n";
+                Log("Cannot send a command if not all fields are filled in.");
                 return;
             }
 
@@ -83,13 +95,14 @@ namespace msshcommands {
                 }
                 catch (Exception ex) {
                     _synchronizationContext.Send((state) => {
-                        txtLog.Text += ex + "\n";
+                        Log(ipOrHost + " - " + ex.ToString().Replace("\n", " ").Replace("\r", " ").Replace("\t", " "));
                     }, null);
                 }
             });
-
-            txtLog.Text += "DONE.\n";
+            Log("DONE.");
         }
+
+        private void Log(string s) { txtLog.Text = DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss") + " - " + s + Environment.NewLine + txtLog.Text; }
         private string[] GetIPsAndHosts() {
             var ipsAndHosts = new HashSet<string>();
 
