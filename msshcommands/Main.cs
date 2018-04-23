@@ -9,6 +9,7 @@
 
 using Renci.SshNet;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,6 +26,7 @@ namespace msshcommands {
     public partial class Main : Form {
         private string _regexIPv4 = "((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
         private SynchronizationContext _synchronizationContext;
+        private ConcurrentDictionary<string, SshClient> _clients = new ConcurrentDictionary<string, SshClient>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Main"/> class.
@@ -45,17 +47,18 @@ namespace msshcommands {
         }
         protected override void OnFormClosing(FormClosingEventArgs e) {
             base.OnFormClosing(e);
+            DisposeSshClients();
 
             Properties.Settings.Default.Save();
         }
 
-        private void Init() {
-            _synchronizationContext = SynchronizationContext.Current;
-        }
+        private void Init() { _synchronizationContext = SynchronizationContext.Current; }
 
         private void btnSSHCommand_Click(object sender, EventArgs e) { SendSSHCommand(); }
 
         private void SendSSHCommand() {
+            btnSSHCommand.Enabled = chkKeepAlive.Enabled = false;
+
             int port = Convert.ToInt32(nudPort.Value);
             string user = txtUser.Text.Trim();
             string password = txtPassword.Text;
@@ -88,21 +91,60 @@ namespace msshcommands {
 
             Parallel.ForEach(GetIPsAndHosts(), (ipOrHost) => {
                 try {
-                    using (var client = pkf == null ? new SshClient(ipOrHost, port, user, password) : new SshClient(ipOrHost, port, user, pkf)) {
-                        client.Connect();
-                        client.RunCommand(command);
+
+                    SshClient client;
+                    _clients.TryGetValue(ipOrHost, out client);
+
+                    if (client == null) {
+                        client = pkf == null ? new SshClient(ipOrHost, port, user, password) : new SshClient(ipOrHost, port, user, pkf);
+                    }
+                    if (!client.IsConnected) client.Connect();
+
+                    SshCommand sshc = client.CreateCommand(command);
+                    string result = sshc.Execute();
+                    if (string.IsNullOrEmpty(result)) result = "OK";
+
+                    _synchronizationContext.Post((state) => {
+                        Log(state.ToString());
+                    }, ipOrHost + "\n" + result);
+
+                    if (Properties.Settings.Default.KeepAlive) {
+                        _clients.TryAdd(ipOrHost, client);
+                    }
+                    else {
+                        client.Dispose();
                     }
                 }
                 catch (Exception ex) {
-                    _synchronizationContext.Send((state) => {
-                        Log(ipOrHost + " - " + ex.ToString().Replace("\n", " ").Replace("\r", " ").Replace("\t", " "));
-                    }, null);
+                    _synchronizationContext.Post((state) => {
+                        Log(state.ToString());
+                    }, ipOrHost + " - " + ex.ToString().Replace("\n", " ").Replace("\r", " ").Replace("\t", " "));
                 }
             });
-            Log("DONE.");
+                        
+            btnSSHCommand.Enabled = chkKeepAlive.Enabled= true;
         }
 
-        private void Log(string s) { txtLog.Text = DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss") + " - " + s + Environment.NewLine + txtLog.Text; }
+        private void chkKeepAlive_CheckedChanged(object sender, EventArgs e) {
+            Properties.Settings.Default.KeepAlive = chkKeepAlive.Checked;
+
+            if (!chkKeepAlive.Checked) {
+                DisposeSshClients();
+                _clients = new ConcurrentDictionary<string, SshClient>();
+            }
+        }
+
+        private void DisposeSshClients() {
+            foreach (var client in _clients.Values) {
+                try {
+                    client.Dispose();
+                } catch {
+                    //Don't care.
+                }
+            }
+        }
+
+        private void Log(string s) { rtxtLog.Text = DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss") + " - " + s.TrimEnd() + "\n\n" + rtxtLog.Text; }
         private string[] GetIPsAndHosts() {
             var ipsAndHosts = new HashSet<string>();
 
@@ -157,6 +199,8 @@ namespace msshcommands {
             }
             return parts;
         }
+
+        private void btnClearLog_Click(object sender, EventArgs e) { rtxtLog.Text = ""; }
 
         private void btnSave_Click(object sender, EventArgs e) {
             if (saveFileDialog.ShowDialog() == DialogResult.OK) {

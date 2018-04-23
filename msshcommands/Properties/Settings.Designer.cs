@@ -82,5 +82,17 @@ namespace msshcommands.Properties {
                 this["PrivateKeyFile"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool KeepAlive {
+            get {
+                return ((bool)(this["KeepAlive"]));
+            }
+            set {
+                this["KeepAlive"] = value;
+            }
+        }
     }
 }
