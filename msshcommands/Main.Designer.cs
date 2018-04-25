@@ -198,6 +198,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.rtxtLog.BackColor = System.Drawing.Color.White;
             this.rtxtLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rtxtLog.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rtxtLog.Location = new System.Drawing.Point(12, 450);
             this.rtxtLog.Name = "rtxtLog";
             this.rtxtLog.ReadOnly = true;
@@ -270,6 +271,7 @@
             this.txtSSHCommand.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSSHCommand.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::msshcommands.Properties.Settings.Default, "SSHCommand", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.txtSSHCommand.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtSSHCommand.Location = new System.Drawing.Point(12, 301);
             this.txtSSHCommand.Multiline = true;
             this.txtSSHCommand.Name = "txtSSHCommand";
@@ -282,6 +284,7 @@
             this.txtIPsHosts.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtIPsHosts.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::msshcommands.Properties.Settings.Default, "IPsHosts", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.txtIPsHosts.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtIPsHosts.Location = new System.Drawing.Point(12, 81);
             this.txtIPsHosts.Multiline = true;
             this.txtIPsHosts.Name = "txtIPsHosts";
