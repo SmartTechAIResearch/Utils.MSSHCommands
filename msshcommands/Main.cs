@@ -28,6 +28,11 @@ namespace msshcommands {
         private SynchronizationContext _synchronizationContext;
         private ConcurrentDictionary<string, SshClient> _clients = new ConcurrentDictionary<string, SshClient>();
 
+        private LinkedList<string> _commandHistory = new LinkedList<string>();
+        private LinkedListNode<string> _currentCommandHistoryNode;
+        private bool _controlPressed;
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Main"/> class.
         /// </summary>
@@ -69,6 +74,13 @@ namespace msshcommands {
             string passphrase = txtPassphrase.Text;
 
             string command = txtSSHCommand.Text.Replace("\r\n", "\n").Trim();
+            if (command.Length == 0) return;
+
+            if (_commandHistory.Count == 0 || txtSSHCommand.Text != _commandHistory.Last.Value) {
+                _currentCommandHistoryNode = _commandHistory.AddLast(command);
+            }
+
+            if (_commandHistory.Count > 200) _commandHistory.RemoveFirst();
 
             if (privateKeyFile.Length != 0) {
                 try {
@@ -86,43 +98,42 @@ namespace msshcommands {
 
             if (txtIPsHosts.Text.Trim().Length == 0 || user.Length == 0 || command.Length == 0) {
                 Log("Cannot send a command if not all fields are filled in.");
-                return;
             }
+            else {
+                Parallel.ForEach(GetIPsAndHosts(), (ipOrHost) => {
+                    try {
 
-            Parallel.ForEach(GetIPsAndHosts(), (ipOrHost) => {
-                try {
+                        SshClient client;
+                        _clients.TryGetValue(ipOrHost, out client);
 
-                    SshClient client;
-                    _clients.TryGetValue(ipOrHost, out client);
+                        if (client == null) {
+                            client = pkf == null ? new SshClient(ipOrHost, port, user, password) : new SshClient(ipOrHost, port, user, pkf);
+                        }
+                        if (!client.IsConnected) client.Connect();
 
-                    if (client == null) {
-                        client = pkf == null ? new SshClient(ipOrHost, port, user, password) : new SshClient(ipOrHost, port, user, pkf);
+                        SshCommand sshc = client.CreateCommand(command);
+                        string result = sshc.Execute();
+                        if (string.IsNullOrEmpty(result)) result = "OK";
+
+                        _synchronizationContext.Post((state) => {
+                            Log(state.ToString());
+                        }, ipOrHost + "\n" + result);
+
+                        if (Properties.Settings.Default.KeepAlive) {
+                            _clients.TryAdd(ipOrHost, client);
+                        }
+                        else {
+                            client.Dispose();
+                        }
                     }
-                    if (!client.IsConnected) client.Connect();
-
-                    SshCommand sshc = client.CreateCommand(command);
-                    string result = sshc.Execute();
-                    if (string.IsNullOrEmpty(result)) result = "OK";
-
-                    _synchronizationContext.Post((state) => {
-                        Log(state.ToString());
-                    }, ipOrHost + "\n" + result);
-
-                    if (Properties.Settings.Default.KeepAlive) {
-                        _clients.TryAdd(ipOrHost, client);
+                    catch (Exception ex) {
+                        _synchronizationContext.Post((state) => {
+                            Log(state.ToString());
+                        }, ipOrHost + " - " + ex.ToString().Replace("\n", " ").Replace("\r", " ").Replace("\t", " "));
                     }
-                    else {
-                        client.Dispose();
-                    }
-                }
-                catch (Exception ex) {
-                    _synchronizationContext.Post((state) => {
-                        Log(state.ToString());
-                    }, ipOrHost + " - " + ex.ToString().Replace("\n", " ").Replace("\r", " ").Replace("\t", " "));
-                }
-            });
-                        
-            btnSSHCommand.Enabled = chkKeepAlive.Enabled= true;
+                });
+            }
+            btnSSHCommand.Enabled = chkKeepAlive.Enabled = true;
         }
 
         private void chkKeepAlive_CheckedChanged(object sender, EventArgs e) {
@@ -138,12 +149,43 @@ namespace msshcommands {
             foreach (var client in _clients.Values) {
                 try {
                     client.Dispose();
-                } catch {
+                }
+                catch {
                     //Don't care.
                 }
             }
         }
 
+        private void txtSSHCommand_KeyDown(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.ControlKey) _controlPressed = true;
+        }
+
+        private void txtSSHCommand_KeyUp(object sender, KeyEventArgs e) {
+            if (_currentCommandHistoryNode == null) _currentCommandHistoryNode = _commandHistory.Last;
+            if (e.KeyCode == Keys.ControlKey) {
+                _controlPressed = false;
+            }
+            else {
+                if (_controlPressed && _currentCommandHistoryNode != null) {
+                    if (e.KeyCode == Keys.Up && _currentCommandHistoryNode.Previous != null) {
+                        string command = txtSSHCommand.Text.Replace("\r\n", "\n").Trim();
+                        if (command.Length == 0) return;
+                        if (_currentCommandHistoryNode == _commandHistory.First) return;
+
+                        _currentCommandHistoryNode = _currentCommandHistoryNode.Previous;
+                        txtSSHCommand.Text = _currentCommandHistoryNode.Value;
+                    }
+                    else if (e.KeyCode == Keys.Down && _currentCommandHistoryNode.Next != null) {
+                        string command = txtSSHCommand.Text.Replace("\r\n", "\n").Trim();
+                        if (command.Length == 0) return;
+                        if (_currentCommandHistoryNode == _commandHistory.Last) return;
+
+                        _currentCommandHistoryNode = _currentCommandHistoryNode.Next;
+                        txtSSHCommand.Text = _currentCommandHistoryNode.Value;
+                    }
+                }
+            }
+        }
         private void Log(string s) { rtxtLog.Text = DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss") + " - " + s.TrimEnd() + "\n\n" + rtxtLog.Text; }
         private string[] GetIPsAndHosts() {
             var ipsAndHosts = new HashSet<string>();

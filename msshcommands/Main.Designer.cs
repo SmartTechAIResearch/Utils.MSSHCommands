@@ -47,6 +47,7 @@
             this.txtUser = new System.Windows.Forms.TextBox();
             this.txtSSHCommand = new System.Windows.Forms.TextBox();
             this.txtIPsHosts = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudPort)).BeginInit();
             this.SuspendLayout();
             // 
@@ -278,6 +279,8 @@
             this.txtSSHCommand.Size = new System.Drawing.Size(760, 100);
             this.txtSSHCommand.TabIndex = 9;
             this.txtSSHCommand.Text = global::msshcommands.Properties.Settings.Default.SSHCommand;
+            this.txtSSHCommand.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSSHCommand_KeyDown);
+            this.txtSSHCommand.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtSSHCommand_KeyUp);
             // 
             // txtIPsHosts
             // 
@@ -292,11 +295,21 @@
             this.txtIPsHosts.TabIndex = 0;
             this.txtIPsHosts.Text = global::msshcommands.Properties.Settings.Default.IPsHosts;
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(121, 277);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(303, 13);
+            this.label7.TabIndex = 18;
+            this.label7.Text = "(Browse command history using CTRL+UP and CTRL+DOWN)";
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.chkKeepAlive);
             this.Controls.Add(this.btnClearLog);
             this.Controls.Add(this.rtxtLog);
@@ -353,6 +366,7 @@
         private System.Windows.Forms.RichTextBox rtxtLog;
         private System.Windows.Forms.Button btnClearLog;
         private System.Windows.Forms.CheckBox chkKeepAlive;
+        private System.Windows.Forms.Label label7;
     }
 }
 
