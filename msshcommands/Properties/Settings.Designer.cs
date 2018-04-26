@@ -49,7 +49,7 @@ namespace msshcommands.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("22")]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
         public decimal Port {
             get {
                 return ((decimal)(this["Port"]));
@@ -92,6 +92,18 @@ namespace msshcommands.Properties {
             }
             set {
                 this["KeepAlive"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public decimal Timeout {
+            get {
+                return ((decimal)(this["Timeout"]));
+            }
+            set {
+                this["Timeout"] = value;
             }
         }
     }

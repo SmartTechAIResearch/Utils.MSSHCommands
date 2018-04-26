@@ -73,15 +73,6 @@ namespace msshcommands {
             string privateKeyFile = txtPrivateKeyFile.Text.Trim();
             string passphrase = txtPassphrase.Text;
 
-            string command = txtSSHCommand.Text.Replace("\r\n", "\n").Trim();
-            if (command.Length == 0) return;
-
-            if (_commandHistory.Count == 0 || txtSSHCommand.Text != _commandHistory.Last.Value) {
-                _currentCommandHistoryNode = _commandHistory.AddLast(command);
-            }
-
-            if (_commandHistory.Count > 200) _commandHistory.RemoveFirst();
-
             if (privateKeyFile.Length != 0) {
                 try {
                     if (passphrase.Length == 0) {
@@ -95,6 +86,18 @@ namespace msshcommands {
                     Log("Failed loading private key fail. Falling back on password.");
                 }
             }
+
+            string command = txtSSHCommand.Text.Replace("\r\n", "\n").Trim();
+            if (command.Length == 0) return;
+
+            if (_commandHistory.Count == 0 || txtSSHCommand.Text != _commandHistory.Last.Value) {
+                _currentCommandHistoryNode = _commandHistory.AddLast(command);
+            }
+
+            if (_commandHistory.Count > 200) _commandHistory.RemoveFirst();
+
+            int timeout = Convert.ToInt32(nudTimeout.Value);
+            bool keepAlive = chkKeepAlive.Checked;
 
             if (txtIPsHosts.Text.Trim().Length == 0 || user.Length == 0 || command.Length == 0) {
                 Log("Cannot send a command if not all fields are filled in.");
@@ -112,6 +115,8 @@ namespace msshcommands {
                         if (!client.IsConnected) client.Connect();
 
                         SshCommand sshc = client.CreateCommand(command);
+                        sshc.CommandTimeout = TimeSpan.FromSeconds(timeout);
+
                         string result = sshc.Execute();
                         if (string.IsNullOrEmpty(result)) result = "OK";
 
@@ -119,7 +124,7 @@ namespace msshcommands {
                             Log(state.ToString());
                         }, ipOrHost + "\n" + result);
 
-                        if (Properties.Settings.Default.KeepAlive) {
+                        if (keepAlive) {
                             _clients.TryAdd(ipOrHost, client);
                         }
                         else {
@@ -129,7 +134,7 @@ namespace msshcommands {
                     catch (Exception ex) {
                         _synchronizationContext.Post((state) => {
                             Log(state.ToString());
-                        }, ipOrHost + " - " + ex.ToString().Replace("\n", " ").Replace("\r", " ").Replace("\t", " "));
+                        }, ipOrHost + " - " + ex.Message.Replace("\n", " ").Replace("\r", " ").Replace("\t", " "));
                     }
                 });
             }
@@ -137,8 +142,6 @@ namespace msshcommands {
         }
 
         private void chkKeepAlive_CheckedChanged(object sender, EventArgs e) {
-            Properties.Settings.Default.KeepAlive = chkKeepAlive.Checked;
-
             if (!chkKeepAlive.Checked) {
                 DisposeSshClients();
                 _clients = new ConcurrentDictionary<string, SshClient>();

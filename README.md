@@ -11,6 +11,8 @@ You do not need to build it yourself. You can just use the binary in the Build f
 ## Overview
 ![](msshcommands.png)
 
+For commands that are run in the background (e.g. commands ending with a &) a response is never returned. The command timeout prevents the application to freeze.
+
 Unchecking *Keep connections alive* closes all current open connections.
 
 When closing the application it remembers all filled in values for when you run it again, except for the password- and passphrase field.

@@ -48,7 +48,11 @@
             this.txtSSHCommand = new System.Windows.Forms.TextBox();
             this.txtIPsHosts = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.nudTimeout = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudPort)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTimeout)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -68,7 +72,7 @@
             this.btnSave.Location = new System.Drawing.Point(616, 526);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
-            this.btnSave.TabIndex = 12;
+            this.btnSave.TabIndex = 13;
             this.btnSave.Text = "Save...";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -80,7 +84,7 @@
             this.btnLoad.Location = new System.Drawing.Point(697, 526);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(75, 23);
-            this.btnLoad.TabIndex = 13;
+            this.btnLoad.TabIndex = 14;
             this.btnLoad.Text = "Load...";
             this.btnLoad.UseVisualStyleBackColor = true;
             this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
@@ -204,7 +208,7 @@
             this.rtxtLog.Name = "rtxtLog";
             this.rtxtLog.ReadOnly = true;
             this.rtxtLog.Size = new System.Drawing.Size(760, 70);
-            this.rtxtLog.TabIndex = 10;
+            this.rtxtLog.TabIndex = 11;
             this.rtxtLog.Text = "";
             // 
             // btnClearLog
@@ -214,7 +218,7 @@
             this.btnClearLog.Location = new System.Drawing.Point(12, 526);
             this.btnClearLog.Name = "btnClearLog";
             this.btnClearLog.Size = new System.Drawing.Size(75, 23);
-            this.btnClearLog.TabIndex = 11;
+            this.btnClearLog.TabIndex = 12;
             this.btnClearLog.Text = "Clear log";
             this.btnClearLog.UseVisualStyleBackColor = true;
             this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
@@ -228,7 +232,7 @@
             this.chkKeepAlive.Location = new System.Drawing.Point(635, 276);
             this.chkKeepAlive.Name = "chkKeepAlive";
             this.chkKeepAlive.Size = new System.Drawing.Size(137, 17);
-            this.chkKeepAlive.TabIndex = 8;
+            this.chkKeepAlive.TabIndex = 9;
             this.chkKeepAlive.Text = "Keep connections alive";
             this.chkKeepAlive.UseVisualStyleBackColor = true;
             this.chkKeepAlive.CheckedChanged += new System.EventHandler(this.chkKeepAlive_CheckedChanged);
@@ -277,7 +281,7 @@
             this.txtSSHCommand.Multiline = true;
             this.txtSSHCommand.Name = "txtSSHCommand";
             this.txtSSHCommand.Size = new System.Drawing.Size(760, 100);
-            this.txtSSHCommand.TabIndex = 9;
+            this.txtSSHCommand.TabIndex = 10;
             this.txtSSHCommand.Text = global::msshcommands.Properties.Settings.Default.SSHCommand;
             this.txtSSHCommand.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSSHCommand_KeyDown);
             this.txtSSHCommand.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtSSHCommand_KeyUp);
@@ -304,11 +308,46 @@
             this.label7.TabIndex = 18;
             this.label7.Text = "(Browse command history using CTRL+UP and CTRL+DOWN)";
             // 
+            // nudTimeout
+            // 
+            this.nudTimeout.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::msshcommands.Properties.Settings.Default, "Timeout", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.nudTimeout.Location = new System.Drawing.Point(526, 275);
+            this.nudTimeout.Maximum = new decimal(new int[] {
+            1410065407,
+            2,
+            0,
+            0});
+            this.nudTimeout.Name = "nudTimeout";
+            this.nudTimeout.Size = new System.Drawing.Size(50, 20);
+            this.nudTimeout.TabIndex = 8;
+            this.nudTimeout.Value = global::msshcommands.Properties.Settings.Default.Timeout;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(475, 277);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(45, 13);
+            this.label8.TabIndex = 20;
+            this.label8.Text = "Timeout";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(582, 277);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(47, 13);
+            this.label9.TabIndex = 21;
+            this.label9.Text = "seconds";
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.nudTimeout);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.chkKeepAlive);
             this.Controls.Add(this.btnClearLog);
@@ -336,6 +375,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "msshcommands";
             ((System.ComponentModel.ISupportInitialize)(this.nudPort)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTimeout)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -367,6 +407,9 @@
         private System.Windows.Forms.Button btnClearLog;
         private System.Windows.Forms.CheckBox chkKeepAlive;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.NumericUpDown nudTimeout;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
     }
 }
 
