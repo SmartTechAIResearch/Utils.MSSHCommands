@@ -202,32 +202,39 @@ namespace msshcommands {
             _clients = new ConcurrentDictionary<string, SshClient>();
         }
 
-        private void txtSSHCommand_KeyDown(object sender, KeyEventArgs e) {
+        private void txt_KeyDown(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.ControlKey) _controlPressed = true;
         }
-
+        private void txtIPsHosts_KeyUp(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.A) txtIPsHosts.SelectAll();
+        }
         private void txtSSHCommand_KeyUp(object sender, KeyEventArgs e) {
             if (_currentCommandHistoryNode == null) _currentCommandHistoryNode = _commandHistory.Last;
             if (e.KeyCode == Keys.ControlKey) {
                 _controlPressed = false;
             }
             else {
-                if (_controlPressed && _currentCommandHistoryNode != null) {
-                    if (e.KeyCode == Keys.Up && _currentCommandHistoryNode.Previous != null) {
-                        string command = txtSSHCommand.Text.Replace("\r\n", "\n").Trim();
-                        if (command.Length == 0) return;
-                        if (_currentCommandHistoryNode == _commandHistory.First) return;
-
-                        _currentCommandHistoryNode = _currentCommandHistoryNode.Previous;
-                        txtSSHCommand.Text = _currentCommandHistoryNode.Value;
+                if (_controlPressed) {
+                    if (e.KeyCode == Keys.A) {
+                        txtSSHCommand.SelectAll();
                     }
-                    else if (e.KeyCode == Keys.Down && _currentCommandHistoryNode.Next != null) {
-                        string command = txtSSHCommand.Text.Replace("\r\n", "\n").Trim();
-                        if (command.Length == 0) return;
-                        if (_currentCommandHistoryNode == _commandHistory.Last) return;
+                    else if (_currentCommandHistoryNode != null) {
+                        if (e.KeyCode == Keys.Up && _currentCommandHistoryNode.Previous != null) {
+                            string command = txtSSHCommand.Text.Replace("\r\n", "\n").Trim();
+                            if (command.Length == 0) return;
+                            if (_currentCommandHistoryNode == _commandHistory.First) return;
 
-                        _currentCommandHistoryNode = _currentCommandHistoryNode.Next;
-                        txtSSHCommand.Text = _currentCommandHistoryNode.Value;
+                            _currentCommandHistoryNode = _currentCommandHistoryNode.Previous;
+                            txtSSHCommand.Text = _currentCommandHistoryNode.Value;
+                        }
+                        else if (e.KeyCode == Keys.Down && _currentCommandHistoryNode.Next != null) {
+                            string command = txtSSHCommand.Text.Replace("\r\n", "\n").Trim();
+                            if (command.Length == 0) return;
+                            if (_currentCommandHistoryNode == _commandHistory.Last) return;
+
+                            _currentCommandHistoryNode = _currentCommandHistoryNode.Next;
+                            txtSSHCommand.Text = _currentCommandHistoryNode.Value;
+                        }
                     }
                 }
             }

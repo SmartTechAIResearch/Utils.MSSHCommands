@@ -214,7 +214,7 @@
             this.rtxtLog.Location = new System.Drawing.Point(0, 23);
             this.rtxtLog.Name = "rtxtLog";
             this.rtxtLog.ReadOnly = true;
-            this.rtxtLog.Size = new System.Drawing.Size(760, 87);
+            this.rtxtLog.Size = new System.Drawing.Size(760, 89);
             this.rtxtLog.TabIndex = 0;
             this.rtxtLog.Text = "";
             // 
@@ -293,7 +293,7 @@
             this.txtSSHCommand.Size = new System.Drawing.Size(760, 104);
             this.txtSSHCommand.TabIndex = 0;
             this.txtSSHCommand.Text = global::msshcommands.Properties.Settings.Default.SSHCommand;
-            this.txtSSHCommand.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSSHCommand_KeyDown);
+            this.txtSSHCommand.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txt_KeyDown);
             this.txtSSHCommand.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtSSHCommand_KeyUp);
             // 
             // txtIPsHosts
@@ -308,6 +308,8 @@
             this.txtIPsHosts.Size = new System.Drawing.Size(760, 100);
             this.txtIPsHosts.TabIndex = 0;
             this.txtIPsHosts.Text = global::msshcommands.Properties.Settings.Default.IPsHosts;
+            this.txtIPsHosts.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txt_KeyDown);
+            this.txtIPsHosts.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtIPsHosts_KeyUp);
             // 
             // label7
             // 
