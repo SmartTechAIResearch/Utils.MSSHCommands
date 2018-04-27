@@ -32,6 +32,8 @@ namespace msshcommands {
         private LinkedListNode<string> _currentCommandHistoryNode;
         private bool _controlPressed;
 
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private int _commandsSend;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Main"/> class.
@@ -59,13 +61,18 @@ namespace msshcommands {
 
         private void Init() { _synchronizationContext = SynchronizationContext.Current; }
 
-        private void btnSSHCommand_Click(object sender, EventArgs e) { SendSSHCommand(); }
+        private void btnSSHCommand_Click(object sender, EventArgs e) {
+            if (btnSSHCommand.Text == "SSH command:") {
+                SendSSHCommand();
+            }
+            else {
+                CancelSSHCommand();
+            }
+        }
 
         private void SendSSHCommand() {
             string command = txtSSHCommand.Text.Replace("\r\n", "\n").Trim();
             if (command.Length == 0) return;
-            
-            btnSSHCommand.Enabled = chkKeepAlive.Enabled = false;
 
             int port = Convert.ToInt32(nudPort.Value);
             string user = txtUser.Text.Trim();
@@ -99,52 +106,87 @@ namespace msshcommands {
             int timeout = Convert.ToInt32(nudTimeout.Value);
             bool keepAlive = chkKeepAlive.Checked;
 
-            if (txtIPsHosts.Text.Trim().Length == 0 || user.Length == 0 || command.Length == 0) {
+            if (txtIPsHosts.Text.Trim().Length == 0 || user.Length == 0 || (password.Length == 0 && pkf == null) || command.Length == 0) {
                 Log("Cannot send a command if not all fields are filled in.");
             }
             else {
-                Parallel.ForEach(GetIPsAndHosts(), (ipOrHost) => {
-                    try {
+                btnSSHCommand.Text = "Cancel";
+                nudTimeout.Enabled = chkKeepAlive.Enabled = false;
 
-                        SshClient client;
-                        _clients.TryGetValue(ipOrHost, out client);
+                string[] ipsAndHosts = GetIPsAndHosts();
+                _commandsSend = 0;
+                ThreadPool.SetMaxThreads(int.MaxValue, int.MaxValue);
 
-                        if (client == null) {
-                            client = pkf == null ? new SshClient(ipOrHost, port, user, password) : new SshClient(ipOrHost, port, user, pkf);
+                foreach (string ioh in ipsAndHosts) {
+                    ThreadPool.QueueUserWorkItem((state) => {
+                        string ipOrHost = state.ToString();
+
+                        try {
+                            SshClient client;
+                            _clients.TryGetValue(ipOrHost, out client);
+
+                            if (client == null) {
+                                client = pkf == null ? new SshClient(ipOrHost, port, user, password) : new SshClient(ipOrHost, port, user, pkf);
+                            }
+
+                            if (!_cancellationTokenSource.Token.IsCancellationRequested) {
+                                if (!client.IsConnected) {
+                                    _synchronizationContext.Send((state2) => { Log(state2.ToString()); }, ipOrHost + "\nConnecting...");
+                                    client.Connect();
+                                }
+                                if (!client.IsConnected) throw new Exception("Failed to connect");
+                            }
+
+                            if (!_cancellationTokenSource.Token.IsCancellationRequested) {
+                                SshCommand sshc = client.CreateCommand(command);
+                                sshc.CommandTimeout = TimeSpan.FromSeconds(timeout);
+
+                                string result = sshc.Execute();
+
+
+                                if (string.IsNullOrWhiteSpace(result)) result = "OK";
+
+                                _synchronizationContext.Send((state2) => { Log(state2.ToString()); }, ipOrHost + "\n" + result);
+
+                                if (keepAlive) _clients.TryAdd(ipOrHost, client); else client.Dispose();
+                            }
                         }
-                        if (!client.IsConnected) client.Connect();
-
-                        SshCommand sshc = client.CreateCommand(command);
-                        sshc.CommandTimeout = TimeSpan.FromSeconds(timeout);
-
-                        string result = sshc.Execute();
-                        if (string.IsNullOrEmpty(result)) result = "OK";
-
-                        _synchronizationContext.Post((state) => {
-                            Log(state.ToString());
-                        }, ipOrHost + "\n" + result);
-
-                        if (keepAlive) {
-                            _clients.TryAdd(ipOrHost, client);
+                        catch (Exception ex) {
+                            if (!_cancellationTokenSource.IsCancellationRequested) {
+                                _synchronizationContext.Post((state2) => {
+                                    Log(state2.ToString());
+                                }, ipOrHost + " - " + ex.Message.Replace("\n", " ").Replace("\r", " ").Replace("\t", " "));
+                            }
                         }
-                        else {
-                            client.Dispose();
+
+                        if (Interlocked.Increment(ref _commandsSend) >= ipsAndHosts.Length) {
+                            _synchronizationContext.Post((state2) => {
+                                btnSSHCommand.Enabled = true;
+                                btnSSHCommand.Text = "SSH command:";
+                                nudTimeout.Enabled = chkKeepAlive.Enabled = true;
+                                _cancellationTokenSource = new CancellationTokenSource();
+                            }, null);
                         }
-                    }
-                    catch (Exception ex) {
-                        _synchronizationContext.Post((state) => {
-                            Log(state.ToString());
-                        }, ipOrHost + " - " + ex.Message.Replace("\n", " ").Replace("\r", " ").Replace("\t", " "));
-                    }
-                });
+
+                    }, ioh);
+
+                }
             }
-            btnSSHCommand.Enabled = chkKeepAlive.Enabled = true;
         }
 
+        private void CancelSSHCommand() {
+            if (MessageBox.Show("Cancelling will close all SSH connections.\nAre you sure that you want to to this?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes) {
+                btnSSHCommand.Enabled = false;
+                _cancellationTokenSource.Cancel();
+                DisposeSshClients();
+            }
+        }
         private void chkKeepAlive_CheckedChanged(object sender, EventArgs e) {
             if (!chkKeepAlive.Checked) {
                 DisposeSshClients();
                 _clients = new ConcurrentDictionary<string, SshClient>();
+
+                btnSSHCommand.Text = "SSH command:";
             }
         }
 
@@ -157,6 +199,7 @@ namespace msshcommands {
                     //Don't care.
                 }
             }
+            _clients = new ConcurrentDictionary<string, SshClient>();
         }
 
         private void txtSSHCommand_KeyDown(object sender, KeyEventArgs e) {

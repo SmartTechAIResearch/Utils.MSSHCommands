@@ -128,6 +128,7 @@
             // 
             this.txtPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPassword.BackColor = System.Drawing.SystemColors.Info;
             this.txtPassword.Location = new System.Drawing.Point(332, 187);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
@@ -180,6 +181,7 @@
             // 
             this.txtPassphrase.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPassphrase.BackColor = System.Drawing.SystemColors.Info;
             this.txtPassphrase.Location = new System.Drawing.Point(332, 239);
             this.txtPassphrase.Name = "txtPassphrase";
             this.txtPassphrase.PasswordChar = '*';
@@ -212,7 +214,7 @@
             this.rtxtLog.Location = new System.Drawing.Point(0, 23);
             this.rtxtLog.Name = "rtxtLog";
             this.rtxtLog.ReadOnly = true;
-            this.rtxtLog.Size = new System.Drawing.Size(760, 85);
+            this.rtxtLog.Size = new System.Drawing.Size(760, 87);
             this.rtxtLog.TabIndex = 0;
             this.rtxtLog.Text = "";
             // 
@@ -233,6 +235,7 @@
             this.chkKeepAlive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chkKeepAlive.AutoSize = true;
             this.chkKeepAlive.Checked = global::msshcommands.Properties.Settings.Default.KeepAlive;
+            this.chkKeepAlive.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkKeepAlive.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::msshcommands.Properties.Settings.Default, "KeepAlive", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.chkKeepAlive.Location = new System.Drawing.Point(635, 276);
             this.chkKeepAlive.Name = "chkKeepAlive";
@@ -260,6 +263,7 @@
             // 
             this.txtPrivateKeyFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPrivateKeyFile.BackColor = System.Drawing.SystemColors.Info;
             this.txtPrivateKeyFile.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::msshcommands.Properties.Settings.Default, "PrivateKeyFile", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.txtPrivateKeyFile.Location = new System.Drawing.Point(332, 213);
             this.txtPrivateKeyFile.Name = "txtPrivateKeyFile";

@@ -21,3 +21,4 @@ When closing the application it remembers all filled in values for when you run 
 
 ## ToDo
 stderr logging output
+Connecting can be really slow
