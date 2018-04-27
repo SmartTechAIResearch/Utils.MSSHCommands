@@ -51,8 +51,13 @@
             this.nudTimeout = new System.Windows.Forms.NumericUpDown();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             ((System.ComponentModel.ISupportInitialize)(this.nudPort)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTimeout)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -72,7 +77,7 @@
             this.btnSave.Location = new System.Drawing.Point(616, 526);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
-            this.btnSave.TabIndex = 13;
+            this.btnSave.TabIndex = 12;
             this.btnSave.Text = "Save...";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -84,7 +89,7 @@
             this.btnLoad.Location = new System.Drawing.Point(697, 526);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(75, 23);
-            this.btnLoad.TabIndex = 14;
+            this.btnLoad.TabIndex = 13;
             this.btnLoad.Text = "Load...";
             this.btnLoad.UseVisualStyleBackColor = true;
             this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
@@ -190,7 +195,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(9, 431);
+            this.label6.Location = new System.Drawing.Point(-3, 4);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(34, 16);
             this.label6.TabIndex = 17;
@@ -204,11 +209,11 @@
             this.rtxtLog.BackColor = System.Drawing.Color.White;
             this.rtxtLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.rtxtLog.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rtxtLog.Location = new System.Drawing.Point(12, 450);
+            this.rtxtLog.Location = new System.Drawing.Point(0, 23);
             this.rtxtLog.Name = "rtxtLog";
             this.rtxtLog.ReadOnly = true;
-            this.rtxtLog.Size = new System.Drawing.Size(760, 70);
-            this.rtxtLog.TabIndex = 11;
+            this.rtxtLog.Size = new System.Drawing.Size(760, 85);
+            this.rtxtLog.TabIndex = 0;
             this.rtxtLog.Text = "";
             // 
             // btnClearLog
@@ -218,7 +223,7 @@
             this.btnClearLog.Location = new System.Drawing.Point(12, 526);
             this.btnClearLog.Name = "btnClearLog";
             this.btnClearLog.Size = new System.Drawing.Size(75, 23);
-            this.btnClearLog.TabIndex = 12;
+            this.btnClearLog.TabIndex = 11;
             this.btnClearLog.Text = "Clear log";
             this.btnClearLog.UseVisualStyleBackColor = true;
             this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
@@ -273,15 +278,16 @@
             // 
             // txtSSHCommand
             // 
-            this.txtSSHCommand.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.txtSSHCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSSHCommand.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::msshcommands.Properties.Settings.Default, "SSHCommand", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.txtSSHCommand.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSSHCommand.Location = new System.Drawing.Point(12, 301);
+            this.txtSSHCommand.Location = new System.Drawing.Point(0, 0);
             this.txtSSHCommand.Multiline = true;
             this.txtSSHCommand.Name = "txtSSHCommand";
-            this.txtSSHCommand.Size = new System.Drawing.Size(760, 100);
-            this.txtSSHCommand.TabIndex = 10;
+            this.txtSSHCommand.Size = new System.Drawing.Size(760, 104);
+            this.txtSSHCommand.TabIndex = 0;
             this.txtSSHCommand.Text = global::msshcommands.Properties.Settings.Default.SSHCommand;
             this.txtSSHCommand.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSSHCommand_KeyDown);
             this.txtSSHCommand.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtSSHCommand_KeyUp);
@@ -310,6 +316,7 @@
             // 
             // nudTimeout
             // 
+            this.nudTimeout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.nudTimeout.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::msshcommands.Properties.Settings.Default, "Timeout", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.nudTimeout.Location = new System.Drawing.Point(526, 275);
             this.nudTimeout.Maximum = new decimal(new int[] {
@@ -324,6 +331,7 @@
             // 
             // label8
             // 
+            this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(475, 277);
             this.label8.Name = "label8";
@@ -333,6 +341,7 @@
             // 
             // label9
             // 
+            this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(582, 277);
             this.label9.Name = "label9";
@@ -340,19 +349,44 @@
             this.label9.TabIndex = 21;
             this.label9.Text = "seconds";
             // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer1.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer1.Location = new System.Drawing.Point(12, 301);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.splitContainer1.Panel1.Controls.Add(this.txtSSHCommand);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.BackColor = System.Drawing.SystemColors.Control;
+            this.splitContainer1.Panel2.Controls.Add(this.label6);
+            this.splitContainer1.Panel2.Controls.Add(this.rtxtLog);
+            this.splitContainer1.Size = new System.Drawing.Size(760, 219);
+            this.splitContainer1.SplitterDistance = 109;
+            this.splitContainer1.SplitterWidth = 2;
+            this.splitContainer1.TabIndex = 10;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.nudTimeout);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.chkKeepAlive);
             this.Controls.Add(this.btnClearLog);
-            this.Controls.Add(this.rtxtLog);
-            this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.txtPassphrase);
             this.Controls.Add(this.nudPort);
@@ -364,7 +398,6 @@
             this.Controls.Add(this.txtPassword);
             this.Controls.Add(this.lblUser);
             this.Controls.Add(this.txtUser);
-            this.Controls.Add(this.txtSSHCommand);
             this.Controls.Add(this.btnSSHCommand);
             this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.btnSave);
@@ -376,6 +409,12 @@
             this.Text = "msshcommands";
             ((System.ComponentModel.ISupportInitialize)(this.nudPort)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTimeout)).EndInit();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -410,6 +449,7 @@
         private System.Windows.Forms.NumericUpDown nudTimeout;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.SplitContainer splitContainer1;
     }
 }
 

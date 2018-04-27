@@ -62,6 +62,9 @@ namespace msshcommands {
         private void btnSSHCommand_Click(object sender, EventArgs e) { SendSSHCommand(); }
 
         private void SendSSHCommand() {
+            string command = txtSSHCommand.Text.Replace("\r\n", "\n").Trim();
+            if (command.Length == 0) return;
+            
             btnSSHCommand.Enabled = chkKeepAlive.Enabled = false;
 
             int port = Convert.ToInt32(nudPort.Value);
@@ -86,9 +89,6 @@ namespace msshcommands {
                     Log("Failed loading private key fail. Falling back on password.");
                 }
             }
-
-            string command = txtSSHCommand.Text.Replace("\r\n", "\n").Trim();
-            if (command.Length == 0) return;
 
             if (_commandHistory.Count == 0 || txtSSHCommand.Text != _commandHistory.Last.Value) {
                 _currentCommandHistoryNode = _commandHistory.AddLast(command);
