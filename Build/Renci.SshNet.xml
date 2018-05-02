@@ -357,6 +357,29 @@
             the timer will not be started.
             </remarks>
         </member>
+        <member name="M:Renci.SshNet.BaseClient.CreateKeepAliveTimer(System.TimeSpan,System.TimeSpan)">
+            <summary>
+            Creates a <see cref="T:System.Threading.Timer"/> with the specified due time and interval.
+            </summary>
+            <param name="dueTime">The amount of time to delay before the keep-alive message is first sent. Specify negative one (-1) milliseconds to prevent the timer from starting. Specify zero (0) to start the timer immediately.</param>
+            <param name="period">The time interval between attempts to send a keep-alive message. Specify negative one (-1) milliseconds to disable periodic signaling.</param>
+            <returns>
+            A <see cref="T:System.Threading.Timer"/> with the specified due time and interval.
+            </returns>
+        </member>
+        <member name="M:Renci.SshNet.BaseClient.DisposeSession">
+            <summary>
+            Disposes the SSH session, and assigns <c>null</c> to <see cref="P:Renci.SshNet.BaseClient.Session"/>.
+            </summary>
+        </member>
+        <member name="M:Renci.SshNet.BaseClient.IsSessionConnected">
+            <summary>
+            Returns a value indicating whether the SSH session is established.
+            </summary>
+            <returns>
+            <c>true</c> if the SSH session is established; otherwise, <c>false</c>.
+            </returns>
+        </member>
         <member name="T:Renci.SshNet.Channels.IChannel">
             <summary>
             Represents SSH channel.
@@ -5286,6 +5309,22 @@
             client instances.
             </remarks>
         </member>
+        <member name="F:Renci.SshNet.ConnectionInfo.DefaultTimeout">
+            <summary>
+            The default connection timeout.
+            </summary>
+            <value>
+            30 seconds.
+            </value>
+        </member>
+        <member name="F:Renci.SshNet.ConnectionInfo.DefaultChannelCloseTimeout">
+            <summary>
+            The default channel close timeout.
+            </summary>
+            <value>
+            1 second.
+            </value>
+        </member>
         <member name="P:Renci.SshNet.ConnectionInfo.KeyExchangeAlgorithms">
             <summary>
             Gets supported key exchange algorithms for this connection.
@@ -5388,6 +5427,18 @@
             <example>
               <code source="..\..\src\Renci.SshNet.Tests\Classes\SshClientTest.cs" region="Example SshClient Connect Timeout" language="C#" title="Specify connection timeout" />
             </example>
+        </member>
+        <member name="P:Renci.SshNet.ConnectionInfo.ChannelCloseTimeout">
+            <summary>
+            Gets or sets the timeout to used when waiting for a server to acknowledge closing a channel.
+            </summary>
+            <value>
+            The channel close timeout. The default value is 1 second.
+            </value>
+            <remarks>
+            If a server does not send a <c>SSH2_MSG_CHANNEL_CLOSE</c> message before the specified timeout
+            elapses, the channel will be closed immediately.
+            </remarks>
         </member>
         <member name="P:Renci.SshNet.ConnectionInfo.Encoding">
             <summary>
@@ -5650,6 +5701,18 @@
             <summary>
             Represents remote connection information.
             </summary>
+        </member>
+        <member name="P:Renci.SshNet.IConnectionInfo.ChannelCloseTimeout">
+            <summary>
+            Gets or sets the timeout to used when waiting for a server to acknowledge closing a channel.
+            </summary>
+            <value>
+            The channel close timeout. The default value is 1 second.
+            </value>
+            <remarks>
+            If a server does not send a <c>SSH2_MSG_CHANNEL_CLOSE</c> message before the specified timeout
+            elapses, the channel will be closed immediately.
+            </remarks>
         </member>
         <member name="P:Renci.SshNet.IConnectionInfo.ChannelRequests">
             <summary>
@@ -16115,7 +16178,7 @@
             Specifies an infinite waiting period.
             </summary>
             <remarks>
-            The value of this field is <c>-1</c> millisecond. 
+            The value of this field is <c>-1</c> millisecond.
             </remarks>
         </member>
         <member name="F:Renci.SshNet.Session.Infinite">
@@ -18380,6 +18443,9 @@
             <param name="height">The terminal height in pixels.</param>
             <param name="terminalModeValues">The terminal mode values.</param>
             <param name="bufferSize">The size of the buffer.</param>
+            <exception cref="T:Renci.SshNet.Common.SshException">The channel could not be opened.</exception>
+            <exception cref="T:Renci.SshNet.Common.SshException">The pseudo-terminal request was not accepted by the server.</exception>
+            <exception cref="T:Renci.SshNet.Common.SshException">The request to start a shell was not accepted by the server.</exception>
         </member>
         <member name="P:Renci.SshNet.ShellStream.CanRead">
             <summary>
@@ -19263,6 +19329,7 @@
             </summary>
             <exception cref="T:System.InvalidOperationException">The session is already connected.</exception>
             <exception cref="T:System.ObjectDisposedException">The method was called after the session was disposed.</exception>
+            <exception cref="T:Renci.SshNet.Common.SshException">The channel session could not be opened, or the subsystem could not be executed.</exception>
         </member>
         <member name="M:Renci.SshNet.SubsystemSession.Disconnect">
             <summary>

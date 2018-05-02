@@ -214,7 +214,7 @@
             this.rtxtLog.Location = new System.Drawing.Point(0, 23);
             this.rtxtLog.Name = "rtxtLog";
             this.rtxtLog.ReadOnly = true;
-            this.rtxtLog.Size = new System.Drawing.Size(760, 89);
+            this.rtxtLog.Size = new System.Drawing.Size(760, 91);
             this.rtxtLog.TabIndex = 0;
             this.rtxtLog.Text = "";
             // 

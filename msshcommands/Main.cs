@@ -33,7 +33,10 @@ namespace msshcommands {
         private bool _controlPressed;
 
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        string[] _ipsAndHosts;
         private int _commandsSend;
+        private Thread[] _pool;
+        private ManualResetEvent _startSendCommandWaitHandle = new ManualResetEvent(false);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Main"/> class.
@@ -54,6 +57,8 @@ namespace msshcommands {
         }
         protected override void OnFormClosing(FormClosingEventArgs e) {
             base.OnFormClosing(e);
+            _startSendCommandWaitHandle.Set();
+            _cancellationTokenSource.Cancel();
             DisposeSshClients();
 
             Properties.Settings.Default.Save();
@@ -107,76 +112,98 @@ namespace msshcommands {
             bool keepAlive = chkKeepAlive.Checked;
 
             if (txtIPsHosts.Text.Trim().Length == 0 || user.Length == 0 || (password.Length == 0 && pkf == null) || command.Length == 0) {
-                Log("Cannot send a command if not all fields are filled in.");
+                Log("Cannot send a command if not all required fields are filled in.");
             }
             else {
                 btnSSHCommand.Text = "Cancel";
                 nudTimeout.Enabled = chkKeepAlive.Enabled = false;
 
-                string[] ipsAndHosts = GetIPsAndHosts();
+                _ipsAndHosts = GetIPsAndHosts();
                 _commandsSend = 0;
+
+                //ThreadPool is used in SSH.NET to queue connection handshake actions. So instead of queueing following on the same thread pool --> Own thread pool implementation.
                 ThreadPool.SetMaxThreads(int.MaxValue, int.MaxValue);
 
-                foreach (string ioh in ipsAndHosts) {
-                    ThreadPool.QueueUserWorkItem((state) => {
-                        string ipOrHost = state.ToString();
+                Log("Connecting...");
 
-                        try {
-                            SshClient client;
-                            _clients.TryGetValue(ipOrHost, out client);
+                _pool = new Thread[_ipsAndHosts.Length];
+                _startSendCommandWaitHandle.Reset();
 
-                            if (client == null) {
-                                client = pkf == null ? new SshClient(ipOrHost, port, user, password) : new SshClient(ipOrHost, port, user, pkf);
-                            }
+                for (int i = 0; i != _ipsAndHosts.Length; i++) {
+                    var t = new Thread(new ParameterizedThreadStart(SendSSHCommand_Callback));
+                    t.IsBackground = true;
+                    _pool[i] = t;
 
-                            if (!_cancellationTokenSource.Token.IsCancellationRequested) {
-                                if (!client.IsConnected) {
-                                    _synchronizationContext.Send((state2) => { Log(state2.ToString()); }, ipOrHost + "\nConnecting...");
-                                    client.Connect();
-                                }
-                                if (!client.IsConnected) throw new Exception("Failed to connect");
-                            }
-
-                            if (!_cancellationTokenSource.Token.IsCancellationRequested) {
-                                SshCommand sshc = client.CreateCommand(command);
-                                sshc.CommandTimeout = TimeSpan.FromSeconds(timeout);
-
-                                string result = sshc.Execute();
-
-
-                                if (string.IsNullOrWhiteSpace(result)) result = "OK";
-
-                                _synchronizationContext.Send((state2) => { Log(state2.ToString()); }, ipOrHost + "\n" + result);
-
-                                if (keepAlive) _clients.TryAdd(ipOrHost, client); else client.Dispose();
-                            }
-                        }
-                        catch (Exception ex) {
-                            if (!_cancellationTokenSource.IsCancellationRequested) {
-                                _synchronizationContext.Post((state2) => {
-                                    Log(state2.ToString());
-                                }, ipOrHost + " - " + ex.Message.Replace("\n", " ").Replace("\r", " ").Replace("\t", " "));
-                            }
-                        }
-
-                        if (Interlocked.Increment(ref _commandsSend) >= ipsAndHosts.Length) {
-                            _synchronizationContext.Post((state2) => {
-                                btnSSHCommand.Enabled = true;
-                                btnSSHCommand.Text = "SSH command:";
-                                nudTimeout.Enabled = chkKeepAlive.Enabled = true;
-                                _cancellationTokenSource = new CancellationTokenSource();
-                            }, null);
-                        }
-
-                    }, ioh);
-
+                    t.Start(new object[] { _ipsAndHosts[i], port, user, pkf, password, command, timeout, keepAlive });
                 }
+
+                _startSendCommandWaitHandle.Set();
+            }
+        }
+
+        private void SendSSHCommand_Callback(object state) {
+            _startSendCommandWaitHandle.WaitOne();
+
+            var args = state as object[];
+
+            string ipOrHost = args[0].ToString();
+            int port = (int)args[1];
+            string user = args[2].ToString();
+            var pkf = args[3] as PrivateKeyFile;
+            string password = args[4].ToString();
+            string command = args[5].ToString();
+            var timeout = TimeSpan.FromSeconds((int)args[6]);
+            bool keepAlive = (bool)args[7];
+
+            try {
+                SshClient client;
+                _clients.TryGetValue(ipOrHost, out client);
+
+                if (client == null) {
+                    client = pkf == null ? new SshClient(ipOrHost, port, user, password) : new SshClient(ipOrHost, port, user, pkf);
+                }
+                client.ConnectionInfo.Timeout = timeout;
+
+                if (!_cancellationTokenSource.Token.IsCancellationRequested) {
+                    if (!client.IsConnected) client.Connect();
+                    if (!client.IsConnected) throw new Exception("Failed to connect");
+                }
+
+                if (!_cancellationTokenSource.Token.IsCancellationRequested) {
+                    SshCommand sshc = client.CreateCommand(command);
+                    sshc.CommandTimeout = timeout;
+
+                    string result = sshc.Execute();
+
+                    if (string.IsNullOrWhiteSpace(result)) result = "OK";
+
+                    _synchronizationContext.Send((state2) => { Log(state2.ToString()); }, ipOrHost + "\n" + result);
+
+                    if (keepAlive) _clients.TryAdd(ipOrHost, client); else client.Dispose();
+                }
+            }
+            catch (Exception ex) {
+                if (!_cancellationTokenSource.IsCancellationRequested) {
+                    _synchronizationContext.Post((state2) => {
+                        Log(state2.ToString());
+                    }, ipOrHost + " - " + ex.Message.Replace("\n", " ").Replace("\r", " ").Replace("\t", " "));
+                }
+            }
+
+            if (Interlocked.Increment(ref _commandsSend) >= _ipsAndHosts.Length) {
+                _synchronizationContext.Post((state2) => {
+                    btnSSHCommand.Enabled = true;
+                    btnSSHCommand.Text = "SSH command:";
+                    nudTimeout.Enabled = chkKeepAlive.Enabled = true;
+                    _cancellationTokenSource = new CancellationTokenSource();
+                }, null);
             }
         }
 
         private void CancelSSHCommand() {
             if (MessageBox.Show("Cancelling will close all SSH connections.\nAre you sure that you want to to this?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes) {
                 btnSSHCommand.Enabled = false;
+                _startSendCommandWaitHandle.Set();
                 _cancellationTokenSource.Cancel();
                 DisposeSshClients();
             }

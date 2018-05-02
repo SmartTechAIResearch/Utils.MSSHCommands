@@ -13,6 +13,8 @@ You do not need to build it yourself. You can just use the binary in the Build f
 
 For commands that are run in the background (e.g. commands ending with a &) a response is never returned. The command timeout prevents the application to freeze.
 
+*Timeout* is for connecting to a server and sending the SSH command both.
+
 Unchecking *Keep connections alive* closes all current open connections.
 
 When closing the application it remembers all filled in values for when you run it again, except for the password- and passphrase field.
