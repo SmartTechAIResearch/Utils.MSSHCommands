@@ -155,38 +155,46 @@ namespace msshcommands {
             var timeout = TimeSpan.FromSeconds((int)args[6]);
             bool keepAlive = (bool)args[7];
 
-            try {
-                SshClient client;
-                _clients.TryGetValue(ipOrHost, out client);
+            //Try 2 times
+            for (int t = 1; ; t++) {
+                SshClient client = null;
+                try {
+                    _clients.TryGetValue(ipOrHost, out client);
 
-                if (client == null) {
-                    client = pkf == null ? new SshClient(ipOrHost, port, user, password) : new SshClient(ipOrHost, port, user, pkf);
+                    if (client == null) {
+                        client = pkf == null ? new SshClient(ipOrHost, port, user, password) : new SshClient(ipOrHost, port, user, pkf);
+                    }
+                    client.ConnectionInfo.Timeout = timeout;
+
+                    if (!_cancellationTokenSource.Token.IsCancellationRequested) {
+                        if (!client.IsConnected) client.Connect();
+                        if (!client.IsConnected) throw new Exception("Failed to connect");
+                    }
+
+                    if (!_cancellationTokenSource.Token.IsCancellationRequested) {
+                        SshCommand sshc = client.CreateCommand(command);
+                        sshc.CommandTimeout = timeout;
+
+                        string result = sshc.Execute();
+
+                        if (string.IsNullOrWhiteSpace(result)) result = "OK";
+
+                        _synchronizationContext.Send((state2) => { Log(state2.ToString()); }, ipOrHost + "\n" + result);
+
+                        if (keepAlive) _clients.TryAdd(ipOrHost, client); else DisposeAndForgetSshClient(ipOrHost, client);
+                    }
+                    break;
                 }
-                client.ConnectionInfo.Timeout = timeout;
-
-                if (!_cancellationTokenSource.Token.IsCancellationRequested) {
-                    if (!client.IsConnected) client.Connect();
-                    if (!client.IsConnected) throw new Exception("Failed to connect");
-                }
-
-                if (!_cancellationTokenSource.Token.IsCancellationRequested) {
-                    SshCommand sshc = client.CreateCommand(command);
-                    sshc.CommandTimeout = timeout;
-
-                    string result = sshc.Execute();
-
-                    if (string.IsNullOrWhiteSpace(result)) result = "OK";
-
-                    _synchronizationContext.Send((state2) => { Log(state2.ToString()); }, ipOrHost + "\n" + result);
-
-                    if (keepAlive) _clients.TryAdd(ipOrHost, client); else client.Dispose();
-                }
-            }
-            catch (Exception ex) {
-                if (!_cancellationTokenSource.IsCancellationRequested) {
-                    _synchronizationContext.Post((state2) => {
-                        Log(state2.ToString());
-                    }, ipOrHost + " - " + ex.Message.Replace("\n", " ").Replace("\r", " ").Replace("\t", " "));
+                catch (Exception ex) {
+                    if (_cancellationTokenSource.IsCancellationRequested) {
+                        break;
+                    }
+                    else {
+                        if (t == 2) //Try 2 times
+                            _synchronizationContext.Post((state2) => { Log(state2.ToString()); }, ipOrHost + " - " + ex.Message.Replace("\n", " ").Replace("\r", " ").Replace("\t", " "));
+                        else
+                            DisposeAndForgetSshClient(ipOrHost, client);
+                    }
                 }
             }
 
@@ -227,6 +235,27 @@ namespace msshcommands {
                 }
             }
             _clients = new ConcurrentDictionary<string, SshClient>();
+        }
+
+        private void DisposeAndForgetSshClient(string ipOrHost, SshClient client) {
+            SshClient stub;
+            if (_clients.TryRemove(ipOrHost, out stub))
+                try {
+                    stub.Dispose();
+                    stub = null;
+                }
+                catch {
+                    //Don't care.
+                }
+
+            if (client != null)
+                try {
+                    client.Dispose();
+                    client = null;
+                }
+                catch {
+                    //Don't care.
+                }
         }
 
         private void txt_KeyDown(object sender, KeyEventArgs e) {
