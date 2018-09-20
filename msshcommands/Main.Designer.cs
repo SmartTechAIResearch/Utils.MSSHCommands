@@ -74,7 +74,7 @@
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSave.AutoSize = true;
-            this.btnSave.Location = new System.Drawing.Point(616, 526);
+            this.btnSave.Location = new System.Drawing.Point(716, 526);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 12;
@@ -86,7 +86,7 @@
             // 
             this.btnLoad.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnLoad.AutoSize = true;
-            this.btnLoad.Location = new System.Drawing.Point(697, 526);
+            this.btnLoad.Location = new System.Drawing.Point(797, 526);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(75, 23);
             this.btnLoad.TabIndex = 13;
@@ -132,7 +132,7 @@
             this.txtPassword.Location = new System.Drawing.Point(332, 187);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
-            this.txtPassword.Size = new System.Drawing.Size(440, 20);
+            this.txtPassword.Size = new System.Drawing.Size(540, 20);
             this.txtPassword.TabIndex = 3;
             // 
             // label3
@@ -148,7 +148,7 @@
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.AutoSize = true;
-            this.button1.Location = new System.Drawing.Point(697, 213);
+            this.button1.Location = new System.Drawing.Point(797, 213);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 5;
@@ -185,7 +185,7 @@
             this.txtPassphrase.Location = new System.Drawing.Point(332, 239);
             this.txtPassphrase.Name = "txtPassphrase";
             this.txtPassphrase.PasswordChar = '*';
-            this.txtPassphrase.Size = new System.Drawing.Size(359, 20);
+            this.txtPassphrase.Size = new System.Drawing.Size(459, 20);
             this.txtPassphrase.TabIndex = 6;
             // 
             // saveFileDialog
@@ -214,7 +214,7 @@
             this.rtxtLog.Location = new System.Drawing.Point(0, 23);
             this.rtxtLog.Name = "rtxtLog";
             this.rtxtLog.ReadOnly = true;
-            this.rtxtLog.Size = new System.Drawing.Size(760, 85);
+            this.rtxtLog.Size = new System.Drawing.Size(860, 89);
             this.rtxtLog.TabIndex = 0;
             this.rtxtLog.Text = "";
             // 
@@ -237,7 +237,7 @@
             this.chkKeepAlive.Checked = global::msshcommands.Properties.Settings.Default.KeepAlive;
             this.chkKeepAlive.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkKeepAlive.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::msshcommands.Properties.Settings.Default, "KeepAlive", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.chkKeepAlive.Location = new System.Drawing.Point(635, 276);
+            this.chkKeepAlive.Location = new System.Drawing.Point(735, 276);
             this.chkKeepAlive.Name = "chkKeepAlive";
             this.chkKeepAlive.Size = new System.Drawing.Size(137, 17);
             this.chkKeepAlive.TabIndex = 9;
@@ -267,7 +267,7 @@
             this.txtPrivateKeyFile.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::msshcommands.Properties.Settings.Default, "PrivateKeyFile", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.txtPrivateKeyFile.Location = new System.Drawing.Point(332, 213);
             this.txtPrivateKeyFile.Name = "txtPrivateKeyFile";
-            this.txtPrivateKeyFile.Size = new System.Drawing.Size(359, 20);
+            this.txtPrivateKeyFile.Size = new System.Drawing.Size(459, 20);
             this.txtPrivateKeyFile.TabIndex = 4;
             this.txtPrivateKeyFile.Text = global::msshcommands.Properties.Settings.Default.PrivateKeyFile;
             // 
@@ -290,7 +290,7 @@
             this.txtSSHCommand.Location = new System.Drawing.Point(0, 0);
             this.txtSSHCommand.Multiline = true;
             this.txtSSHCommand.Name = "txtSSHCommand";
-            this.txtSSHCommand.Size = new System.Drawing.Size(760, 104);
+            this.txtSSHCommand.Size = new System.Drawing.Size(860, 104);
             this.txtSSHCommand.TabIndex = 0;
             this.txtSSHCommand.Text = global::msshcommands.Properties.Settings.Default.SSHCommand;
             this.txtSSHCommand.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txt_KeyDown);
@@ -305,7 +305,7 @@
             this.txtIPsHosts.Location = new System.Drawing.Point(12, 81);
             this.txtIPsHosts.Multiline = true;
             this.txtIPsHosts.Name = "txtIPsHosts";
-            this.txtIPsHosts.Size = new System.Drawing.Size(760, 100);
+            this.txtIPsHosts.Size = new System.Drawing.Size(860, 100);
             this.txtIPsHosts.TabIndex = 0;
             this.txtIPsHosts.Text = global::msshcommands.Properties.Settings.Default.IPsHosts;
             this.txtIPsHosts.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txt_KeyDown);
@@ -316,15 +316,15 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(121, 277);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(303, 13);
+            this.label7.Size = new System.Drawing.Size(371, 13);
             this.label7.TabIndex = 18;
-            this.label7.Text = "(Browse command history using CTRL+UP and CTRL+DOWN)";
+            this.label7.Text = "(Send/cancel: CTRL+ENTER - History: CTRL+UP, CTRL+DOWN, CTRL+R)";
             // 
             // nudTimeout
             // 
             this.nudTimeout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.nudTimeout.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::msshcommands.Properties.Settings.Default, "Timeout", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.nudTimeout.Location = new System.Drawing.Point(526, 275);
+            this.nudTimeout.Location = new System.Drawing.Point(626, 275);
             this.nudTimeout.Maximum = new decimal(new int[] {
             1410065407,
             2,
@@ -339,7 +339,7 @@
             // 
             this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(475, 277);
+            this.label8.Location = new System.Drawing.Point(575, 277);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(45, 13);
             this.label8.TabIndex = 20;
@@ -349,7 +349,7 @@
             // 
             this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(582, 277);
+            this.label9.Location = new System.Drawing.Point(682, 277);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(47, 13);
             this.label9.TabIndex = 21;
@@ -376,7 +376,7 @@
             this.splitContainer1.Panel2.BackColor = System.Drawing.SystemColors.Control;
             this.splitContainer1.Panel2.Controls.Add(this.label6);
             this.splitContainer1.Panel2.Controls.Add(this.rtxtLog);
-            this.splitContainer1.Size = new System.Drawing.Size(760, 219);
+            this.splitContainer1.Size = new System.Drawing.Size(860, 219);
             this.splitContainer1.SplitterDistance = 109;
             this.splitContainer1.SplitterWidth = 2;
             this.splitContainer1.TabIndex = 10;
@@ -385,7 +385,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 561);
+            this.ClientSize = new System.Drawing.Size(884, 561);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.nudTimeout);

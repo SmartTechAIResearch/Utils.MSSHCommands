@@ -11,6 +11,8 @@ You do not need to build it yourself. You can just use the binary in the Build f
 ## Overview
 ![](msshcommands.png)
 
+![](history.png)
+
 For commands that are run in the background (e.g. commands ending with a &) a response is never returned. The command timeout prevents the application to freeze.
 
 *Timeout* is for connecting to a server and sending the SSH command both.

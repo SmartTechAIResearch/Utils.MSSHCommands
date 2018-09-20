@@ -28,8 +28,7 @@ namespace msshcommands {
         private SynchronizationContext _synchronizationContext;
         private ConcurrentDictionary<string, SshClient> _clients = new ConcurrentDictionary<string, SshClient>();
 
-        private LinkedList<string> _commandHistory = new LinkedList<string>();
-        private LinkedListNode<string> _currentCommandHistoryNode;
+        private CommandHistory _commandHistory = CommandHistory.GetInstance();
         private bool _controlPressed;
 
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
@@ -73,11 +72,20 @@ namespace msshcommands {
             else {
                 CancelSSHCommand();
             }
+
+            txtSSHCommand.Focus();
         }
 
         private void SendSSHCommand() {
-            string command = txtSSHCommand.Text.Replace("\r\n", "\n").Trim();
+            string command = txtSSHCommand.Text.Trim();
             if (command.Length == 0) return;
+
+            if (_commandHistory.Count == 0 || txtSSHCommand.Text != _commandHistory.Last.Value) {
+                _commandHistory.CurrentCommandHistoryNode = _commandHistory.AddLast(command);
+            }
+            if (_commandHistory.Count > 200) _commandHistory.RemoveFirst();
+
+            command = command.Replace("\r", "");
 
             int port = Convert.ToInt32(nudPort.Value);
             string user = txtUser.Text.Trim();
@@ -102,12 +110,6 @@ namespace msshcommands {
                 }
             }
 
-            if (_commandHistory.Count == 0 || txtSSHCommand.Text != _commandHistory.Last.Value) {
-                _currentCommandHistoryNode = _commandHistory.AddLast(command);
-            }
-
-            if (_commandHistory.Count > 200) _commandHistory.RemoveFirst();
-
             int timeout = Convert.ToInt32(nudTimeout.Value);
             bool keepAlive = chkKeepAlive.Checked;
 
@@ -124,7 +126,7 @@ namespace msshcommands {
                 //ThreadPool is used in SSH.NET to queue connection handshake actions. So instead of queueing following on the same thread pool --> Own thread pool implementation.
                 ThreadPool.SetMaxThreads(int.MaxValue, int.MaxValue);
 
-                Log("Connecting...");
+                Log("^----- Connecting and sending -----^ @ " + DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss") + "\n");
 
                 _pool = new Thread[_ipsAndHosts.Length];
                 _startSendCommandWaitHandle.Reset();
@@ -134,7 +136,7 @@ namespace msshcommands {
                     t.IsBackground = true;
                     _pool[i] = t;
 
-                    t.Start(new object[] { _ipsAndHosts[i], port, user, pkf, password, command, timeout, keepAlive });
+                    t.Start(new object[] { i, _ipsAndHosts.Length, _ipsAndHosts[i], port, user, pkf, password, command, timeout, keepAlive });
                 }
 
                 _startSendCommandWaitHandle.Set();
@@ -146,14 +148,16 @@ namespace msshcommands {
 
             var args = state as object[];
 
-            string ipOrHost = args[0].ToString();
-            int port = (int)args[1];
-            string user = args[2].ToString();
-            var pkf = args[3] as PrivateKeyFile;
-            string password = args[4].ToString();
-            string command = args[5].ToString();
-            var timeout = TimeSpan.FromSeconds((int)args[6]);
-            bool keepAlive = (bool)args[7];
+            int i = (int)args[0];
+            int size = (int)args[1];
+            string ipOrHost = args[2].ToString();
+            int port = (int)args[3];
+            string user = args[4].ToString();
+            var pkf = args[5] as PrivateKeyFile;
+            string password = args[6].ToString();
+            string command = args[7].ToString();
+            var timeout = TimeSpan.FromSeconds((int)args[8]);
+            bool keepAlive = (bool)args[9];
 
             //Try 2 times
             for (int t = 1; ; t++) {
@@ -179,7 +183,7 @@ namespace msshcommands {
 
                         if (string.IsNullOrWhiteSpace(result)) result = "OK";
 
-                        _synchronizationContext.Send((state2) => { Log(state2.ToString()); }, ipOrHost + "\n" + result);
+                        _synchronizationContext.Send((state2) => { Log(state2.ToString()); }, "  " + i + " / " + size + " - " + ipOrHost + "\t- " + result);
 
                         if (keepAlive) _clients.TryAdd(ipOrHost, client); else DisposeAndForgetSshClient(ipOrHost, client);
                     }
@@ -191,7 +195,7 @@ namespace msshcommands {
                     }
                     else {
                         if (t == 2) //Try 2 times
-                            _synchronizationContext.Post((state2) => { Log(state2.ToString()); }, ipOrHost + " - " + ex.Message.Replace("\n", " ").Replace("\r", " ").Replace("\t", " "));
+                            _synchronizationContext.Post((state2) => { Log(state2.ToString()); }, "  " + i + " / " + size + " - " + ipOrHost + "\t- " + ex.Message.Replace("\n", " ").Replace("\r", " ").Replace("\t", " "));
                         else
                             DisposeAndForgetSshClient(ipOrHost, client);
                     }
@@ -204,6 +208,8 @@ namespace msshcommands {
                     btnSSHCommand.Text = "SSH command:";
                     nudTimeout.Enabled = chkKeepAlive.Enabled = true;
                     _cancellationTokenSource = new CancellationTokenSource();
+
+                    Log("\nv-----          Done          -----v @ " + DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss") + "\n");
                 }, null);
             }
         }
@@ -260,12 +266,16 @@ namespace msshcommands {
 
         private void txt_KeyDown(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.ControlKey) _controlPressed = true;
+            else if (_controlPressed && e.KeyCode == Keys.Enter) e.SuppressKeyPress = true;
         }
         private void txtIPsHosts_KeyUp(object sender, KeyEventArgs e) {
-            if (e.KeyCode == Keys.A) txtIPsHosts.SelectAll();
+            if (e.KeyCode == Keys.ControlKey) {
+                _controlPressed = false;
+            }
+            else if (_controlPressed && e.KeyCode == Keys.A) txtIPsHosts.SelectAll();
         }
         private void txtSSHCommand_KeyUp(object sender, KeyEventArgs e) {
-            if (_currentCommandHistoryNode == null) _currentCommandHistoryNode = _commandHistory.Last;
+            if (_commandHistory.CurrentCommandHistoryNode == null) _commandHistory.CurrentCommandHistoryNode = _commandHistory.Last;
             if (e.KeyCode == Keys.ControlKey) {
                 _controlPressed = false;
             }
@@ -273,29 +283,49 @@ namespace msshcommands {
                 if (_controlPressed) {
                     if (e.KeyCode == Keys.A) {
                         txtSSHCommand.SelectAll();
+                        e.Handled = true;
                     }
-                    else if (_currentCommandHistoryNode != null) {
-                        if (e.KeyCode == Keys.Up && _currentCommandHistoryNode.Previous != null) {
-                            string command = txtSSHCommand.Text.Replace("\r\n", "\n").Trim();
+                    else if (e.KeyCode == Keys.Enter) {
+                        e.Handled = true;
+                        btnSSHCommand.PerformClick();
+                    }
+                    else if (e.KeyCode == Keys.R) {
+                        _controlPressed = false;
+                        var history = new History();
+                        history.SelectedValueChanged += History_SelectedValueChanged;
+                        history.ShowDialog();
+                        e.Handled = true;
+                    }
+                    else if (_commandHistory.CurrentCommandHistoryNode != null) {
+                        if (e.KeyCode == Keys.Up && _commandHistory.CurrentCommandHistoryNode.Previous != null) {
+                            string command = txtSSHCommand.Text.Trim();
                             if (command.Length == 0) return;
-                            if (_currentCommandHistoryNode == _commandHistory.First) return;
+                            if (_commandHistory.CurrentCommandHistoryNode == _commandHistory.First) return;
 
-                            _currentCommandHistoryNode = _currentCommandHistoryNode.Previous;
-                            txtSSHCommand.Text = _currentCommandHistoryNode.Value;
+                            _commandHistory.CurrentCommandHistoryNode = _commandHistory.CurrentCommandHistoryNode.Previous;
+                            txtSSHCommand.Text = _commandHistory.CurrentCommandHistoryNode.Value;
+                            e.Handled = true;
                         }
-                        else if (e.KeyCode == Keys.Down && _currentCommandHistoryNode.Next != null) {
-                            string command = txtSSHCommand.Text.Replace("\r\n", "\n").Trim();
+                        else if (e.KeyCode == Keys.Down && _commandHistory.CurrentCommandHistoryNode.Next != null) {
+                            string command = txtSSHCommand.Text.Trim();
                             if (command.Length == 0) return;
-                            if (_currentCommandHistoryNode == _commandHistory.Last) return;
+                            if (_commandHistory.CurrentCommandHistoryNode == _commandHistory.Last) return;
 
-                            _currentCommandHistoryNode = _currentCommandHistoryNode.Next;
-                            txtSSHCommand.Text = _currentCommandHistoryNode.Value;
+                            _commandHistory.CurrentCommandHistoryNode = _commandHistory.CurrentCommandHistoryNode.Next;
+                            txtSSHCommand.Text = _commandHistory.CurrentCommandHistoryNode.Value;
+
+                            e.Handled = true;
                         }
                     }
                 }
             }
         }
-        private void Log(string s) { rtxtLog.Text = DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss") + " - " + s.TrimEnd() + "\n\n" + rtxtLog.Text; }
+
+        private void History_SelectedValueChanged(object sender, EventArgs e) {
+            txtSSHCommand.Text = (sender as History).SelectedValue;
+        }
+
+        private void Log(string s) { rtxtLog.Text = s.TrimEnd() + "\n" + rtxtLog.Text; }
         private string[] GetIPsAndHosts() {
             var ipsAndHosts = new HashSet<string>();
 
