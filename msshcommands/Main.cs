@@ -80,6 +80,8 @@ namespace msshcommands {
             string command = txtSSHCommand.Text.Trim();
             if (command.Length == 0) return;
 
+            if (chkAutoClearLog.Checked) rtxtLog.Text = "";
+
             if (_commandHistory.Count == 0 || txtSSHCommand.Text != _commandHistory.Last.Value) {
                 _commandHistory.CurrentCommandHistoryNode = _commandHistory.AddLast(command);
             }
