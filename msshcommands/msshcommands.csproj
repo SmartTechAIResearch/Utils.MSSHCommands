@@ -80,6 +80,7 @@
     <Compile Include="Variables\VariableControl.Designer.cs">
       <DependentUpon>VariableControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Variables\Variables.cs" />
     <EmbeddedResource Include="Automation.resx">
       <DependentUpon>Automation.cs</DependentUpon>
     </EmbeddedResource>
