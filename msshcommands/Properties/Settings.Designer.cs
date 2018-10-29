@@ -118,5 +118,17 @@ namespace msshcommands.Properties {
                 this["AutoClearLog"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Automation {
+            get {
+                return ((bool)(this["Automation"]));
+            }
+            set {
+                this["Automation"] = value;
+            }
+        }
     }
 }

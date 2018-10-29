@@ -7,7 +7,7 @@
         /// <summary>
         /// Can step over the InclusiveTo if the value range is not dividable by the step.
         /// </summary>
-        public double StepSize { get; set; } = 1;
+        public double Stepsize { get; set; } = 1;
         /// <summary>
         /// When the number of steps is reached CurrentValue is reset to InclusiveFrom.
         /// </summary>
@@ -24,7 +24,7 @@
                 else if (_step == 0)
                     _currentValue = InclusiveFrom;
                 else
-                    _currentValue += StepSize;
+                    _currentValue += Stepsize;
 
                 base.CurrentValue = _currentValue.ToString();
                 return CurrentValue;

@@ -33,10 +33,9 @@
             // 
             this.chkUse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.chkUse.AutoSize = true;
-            this.chkUse.Location = new System.Drawing.Point(8, 34);
-            this.chkUse.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkUse.Location = new System.Drawing.Point(6, 28);
             this.chkUse.Name = "chkUse";
-            this.chkUse.Size = new System.Drawing.Size(55, 21);
+            this.chkUse.Size = new System.Drawing.Size(45, 17);
             this.chkUse.TabIndex = 0;
             this.chkUse.Text = "Use";
             this.chkUse.UseVisualStyleBackColor = true;
@@ -46,10 +45,10 @@
             // 
             this.lbl.AutoSize = true;
             this.lbl.Font = new System.Drawing.Font("Consolas", 11.25F);
-            this.lbl.Location = new System.Drawing.Point(4, 4);
-            this.lbl.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.lbl.Location = new System.Drawing.Point(3, 3);
+            this.lbl.Margin = new System.Windows.Forms.Padding(3, 3, 3, 3);
             this.lbl.Name = "lbl";
-            this.lbl.Size = new System.Drawing.Size(50, 22);
+            this.lbl.Size = new System.Drawing.Size(40, 18);
             this.lbl.TabIndex = 1;
             this.lbl.Text = "$var";
             // 
@@ -57,10 +56,9 @@
             // 
             this.btnEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnEdit.AutoSize = true;
-            this.btnEdit.Location = new System.Drawing.Point(192, 30);
-            this.btnEdit.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnEdit.Location = new System.Drawing.Point(142, 24);
             this.btnEdit.Name = "btnEdit";
-            this.btnEdit.Size = new System.Drawing.Size(35, 28);
+            this.btnEdit.Size = new System.Drawing.Size(26, 23);
             this.btnEdit.TabIndex = 1;
             this.btnEdit.Text = "...";
             this.btnEdit.UseVisualStyleBackColor = true;
@@ -70,10 +68,9 @@
             // 
             this.btnRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnRemove.AutoSize = true;
-            this.btnRemove.Location = new System.Drawing.Point(232, 30);
-            this.btnRemove.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnRemove.Location = new System.Drawing.Point(172, 24);
             this.btnRemove.Name = "btnRemove";
-            this.btnRemove.Size = new System.Drawing.Size(33, 28);
+            this.btnRemove.Size = new System.Drawing.Size(25, 23);
             this.btnRemove.TabIndex = 2;
             this.btnRemove.Text = "-";
             this.btnRemove.UseVisualStyleBackColor = true;
@@ -81,16 +78,15 @@
             // 
             // VariableControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.btnRemove);
             this.Controls.Add(this.btnEdit);
             this.Controls.Add(this.lbl);
             this.Controls.Add(this.chkUse);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "VariableControl";
-            this.Size = new System.Drawing.Size(269, 62);
+            this.Size = new System.Drawing.Size(200, 50);
             this.ResumeLayout(false);
             this.PerformLayout();
 

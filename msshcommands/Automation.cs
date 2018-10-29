@@ -1,4 +1,5 @@
-﻿using System;
+﻿using msshcommands.Variables;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,6 +16,16 @@ namespace msshcommands
         public Automation()
         {
             InitializeComponent();
+        }
+
+        private void btnAddList_Click(object sender, EventArgs e) {
+            var lvs = new ListVariableSettings();
+            lvs.ShowDialog();
+        }
+
+        private void btnAddRange_Click(object sender, EventArgs e) {
+            var rvs = new RangeVariableSettings();
+            rvs.ShowDialog();
         }
     }
 }

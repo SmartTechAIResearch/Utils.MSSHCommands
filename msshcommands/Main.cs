@@ -65,6 +65,12 @@ namespace msshcommands {
 
         private void Init() { _synchronizationContext = SynchronizationContext.Current; }
 
+        private void btnAutomation_Click(object sender, EventArgs e) {
+            var automation = new Automation();
+            automation.ShowDialog();
+            chkAutomation.Checked = true;
+        }
+
         private void btnSSHCommand_Click(object sender, EventArgs e) {
             if (btnSSHCommand.Text == "SSH command:") {
                 SendSSHCommand();

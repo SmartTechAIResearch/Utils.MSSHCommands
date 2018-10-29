@@ -24,16 +24,23 @@ namespace msshcommands.Variables {
         private void chkUse_CheckedChanged(object sender, System.EventArgs e) {
             _variable.Use = chkUse.Checked;
         }
-
+        private void btnEdit_Click(object sender, System.EventArgs e) {
+            if (_variable is ListVariable) {
+                var lvs = new ListVariableSettings();
+                lvs.Variable = _variable as ListVariable;
+                lvs.ShowDialog();
+            }
+            else {
+                var rvs = new RangeVariableSettings();
+                rvs.Variable = _variable as RangeVariable;
+                rvs.ShowDialog();
+            }
+        }
         private void btnRemove_Click(object sender, System.EventArgs e) {
             Variables.GetInstance().Remove(_variable);
 
 #warning this.Parent.Controls.Remove(this);
             this.Parent.Controls.Remove(this);
-        }
-
-        private void btnEdit_Click(object sender, System.EventArgs e) {
-
         }
     }
 }
