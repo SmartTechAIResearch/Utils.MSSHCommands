@@ -11,6 +11,7 @@ using Renci.SshNet;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -65,6 +66,9 @@ namespace msshcommands {
 
         private void Init() { _synchronizationContext = SynchronizationContext.Current; }
 
+        private void chkAutomation_CheckedChanged(object sender, EventArgs e) {
+            chkAutomation.ForeColor = chkAutomation.Checked ? Color.Green : Color.Gray;
+        }
         private void btnAutomation_Click(object sender, EventArgs e) {
             var automation = new Automation();
             automation.ShowDialog();

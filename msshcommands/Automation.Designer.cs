@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Automation));
             this.label2 = new System.Windows.Forms.Label();
             this.btnAddList = new System.Windows.Forms.Button();
             this.btnAddRange = new System.Windows.Forms.Button();
@@ -47,9 +46,11 @@
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(12, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(432, 80);
+            this.label2.Size = new System.Drawing.Size(432, 48);
             this.label2.TabIndex = 2;
-            this.label2.Text = resources.GetString("label2.Text");
+            this.label2.Text = "- Define lists and ranges, use their name, e.g. $var, in the SSH command\r\n- Set h" +
+    "ow many times the command must be issued\r\n- Note: variables values always reset " +
+    "to start / overflow to start if needed";
             // 
             // btnAddList
             // 
@@ -105,6 +106,7 @@
             this.btnClearVars.TabIndex = 2;
             this.btnClearVars.Text = "Clear variables";
             this.btnClearVars.UseVisualStyleBackColor = true;
+            this.btnClearVars.Click += new System.EventHandler(this.btnClearVars_Click);
             // 
             // label3
             // 
@@ -135,6 +137,7 @@
             this.btnClose.TabIndex = 11;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // Automation
             // 
@@ -152,9 +155,11 @@
             this.Controls.Add(this.btnAddList);
             this.Controls.Add(this.label2);
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(600, 500);
             this.Name = "Automation";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.Text = "Use variables to automate commands";
             ((System.ComponentModel.ISupportInitialize)(this.nudIssue)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

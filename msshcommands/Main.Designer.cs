@@ -45,10 +45,10 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.chkAutomation = new System.Windows.Forms.CheckBox();
-            this.chkAutoClearLog = new System.Windows.Forms.CheckBox();
             this.txtSSHCommand = new msshcommands.CueTextBox();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.chkAutoClearLog = new System.Windows.Forms.CheckBox();
+            this.chkAutomation = new System.Windows.Forms.CheckBox();
             this.nudTimeout = new System.Windows.Forms.NumericUpDown();
             this.chkKeepAlive = new System.Windows.Forms.CheckBox();
             this.nudPort = new System.Windows.Forms.NumericUpDown();
@@ -219,7 +219,7 @@
             this.rtxtLog.Location = new System.Drawing.Point(0, 23);
             this.rtxtLog.Name = "rtxtLog";
             this.rtxtLog.ReadOnly = true;
-            this.rtxtLog.Size = new System.Drawing.Size(860, 85);
+            this.rtxtLog.Size = new System.Drawing.Size(860, 87);
             this.rtxtLog.TabIndex = 0;
             this.rtxtLog.Text = "";
             // 
@@ -281,34 +281,6 @@
             this.splitContainer1.SplitterWidth = 2;
             this.splitContainer1.TabIndex = 11;
             // 
-            // chkAutomation
-            // 
-            this.chkAutomation.AutoSize = true;
-            this.chkAutomation.Checked = global::msshcommands.Properties.Settings.Default.Automation;
-            this.chkAutomation.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::msshcommands.Properties.Settings.Default, "Automation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.chkAutomation.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAutomation.Location = new System.Drawing.Point(3, 8);
-            this.chkAutomation.Name = "chkAutomation";
-            this.chkAutomation.Size = new System.Drawing.Size(89, 17);
-            this.chkAutomation.TabIndex = 0;
-            this.chkAutomation.Text = "Automation";
-            this.chkAutomation.UseVisualStyleBackColor = true;
-            // 
-            // chkAutoClearLog
-            // 
-            this.chkAutoClearLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.chkAutoClearLog.AutoSize = true;
-            this.chkAutoClearLog.Checked = global::msshcommands.Properties.Settings.Default.AutoClearLog;
-            this.chkAutoClearLog.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::msshcommands.Properties.Settings.Default, "AutoClearLog", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.chkAutoClearLog.Location = new System.Drawing.Point(92, 530);
-            this.chkAutoClearLog.Margin = new System.Windows.Forms.Padding(2);
-            this.chkAutoClearLog.Name = "chkAutoClearLog";
-            this.chkAutoClearLog.Size = new System.Drawing.Size(74, 17);
-            this.chkAutoClearLog.TabIndex = 2;
-            this.chkAutoClearLog.Text = "Auto clear";
-            this.toolTip.SetToolTip(this.chkAutoClearLog, "Check to clear on each SSH comand");
-            this.chkAutoClearLog.UseVisualStyleBackColor = true;
-            // 
             // txtSSHCommand
             // 
             this.txtSSHCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -325,6 +297,36 @@
             this.txtSSHCommand.Text = global::msshcommands.Properties.Settings.Default.SSHCommand;
             this.txtSSHCommand.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txt_KeyDown);
             this.txtSSHCommand.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtSSHCommand_KeyUp);
+            // 
+            // chkAutoClearLog
+            // 
+            this.chkAutoClearLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.chkAutoClearLog.AutoSize = true;
+            this.chkAutoClearLog.Checked = global::msshcommands.Properties.Settings.Default.AutoClearLog;
+            this.chkAutoClearLog.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::msshcommands.Properties.Settings.Default, "AutoClearLog", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.chkAutoClearLog.Location = new System.Drawing.Point(92, 530);
+            this.chkAutoClearLog.Margin = new System.Windows.Forms.Padding(2);
+            this.chkAutoClearLog.Name = "chkAutoClearLog";
+            this.chkAutoClearLog.Size = new System.Drawing.Size(74, 17);
+            this.chkAutoClearLog.TabIndex = 2;
+            this.chkAutoClearLog.Text = "Auto clear";
+            this.toolTip.SetToolTip(this.chkAutoClearLog, "Check to clear on each SSH comand");
+            this.chkAutoClearLog.UseVisualStyleBackColor = true;
+            // 
+            // chkAutomation
+            // 
+            this.chkAutomation.AutoSize = true;
+            this.chkAutomation.Checked = global::msshcommands.Properties.Settings.Default.Automation;
+            this.chkAutomation.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::msshcommands.Properties.Settings.Default, "Automation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.chkAutomation.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkAutomation.ForeColor = System.Drawing.Color.Gray;
+            this.chkAutomation.Location = new System.Drawing.Point(3, 8);
+            this.chkAutomation.Name = "chkAutomation";
+            this.chkAutomation.Size = new System.Drawing.Size(89, 17);
+            this.chkAutomation.TabIndex = 0;
+            this.chkAutomation.Text = "Automation";
+            this.chkAutomation.UseVisualStyleBackColor = true;
+            this.chkAutomation.CheckedChanged += new System.EventHandler(this.chkAutomation_CheckedChanged);
             // 
             // nudTimeout
             // 
@@ -461,6 +463,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtIPsHosts);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimumSize = new System.Drawing.Size(900, 600);
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "msshcommands";

@@ -55,7 +55,7 @@
             // 
             this.btnClearHistory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClearHistory.Location = new System.Drawing.Point(11, 415);
+            this.btnClearHistory.Location = new System.Drawing.Point(11, 426);
             this.btnClearHistory.Name = "btnClearHistory";
             this.btnClearHistory.Size = new System.Drawing.Size(312, 23);
             this.btnClearHistory.TabIndex = 2;
@@ -74,7 +74,7 @@
             this.lbHistory.ItemHeight = 18;
             this.lbHistory.Location = new System.Drawing.Point(12, 67);
             this.lbHistory.Name = "lbHistory";
-            this.lbHistory.Size = new System.Drawing.Size(310, 346);
+            this.lbHistory.Size = new System.Drawing.Size(310, 357);
             this.lbHistory.TabIndex = 1;
             this.lbHistory.SelectedValueChanged += new System.EventHandler(this.lbHistory_SelectedValueChanged);
             // 
@@ -82,13 +82,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(334, 450);
+            this.ClientSize = new System.Drawing.Size(334, 461);
             this.Controls.Add(this.btnClearHistory);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtFilter);
             this.Controls.Add(this.lbHistory);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(350, 500);
             this.Name = "History";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

@@ -1,7 +1,6 @@
 ﻿namespace msshcommands.Variables {
     public class RangeVariable : Variable {
         private double? _currentValue = null;
-        private int _step = -1;
 
         public double InclusiveFrom { get; set; } = 0;
         /// <summary>
@@ -15,30 +14,24 @@
 
         public override string NextValue {
             get {
-                ++_step;
-                if (_step >= NumberOfSteps) _step = 0;
-                if (NumberOfSteps == 0) _step = -1;
+                ++base.Step;
+                if (base.Step >= NumberOfSteps) base.Step = 0;
+                if (NumberOfSteps == 0) base.Step = -1;
 
-                if (_step == -1)
+                if (base.Step == -1)
                     _currentValue = null;
-                else if (_step == 0)
+                else if (base.Step == 0)
                     _currentValue = InclusiveFrom;
                 else
                     _currentValue += Stepsize;
 
-                base.CurrentValue = _currentValue.ToString();
+                base.CurrentValue = _currentValue == null ? "" : _currentValue.ToString();
                 return CurrentValue;
             }
         }
 
-        public override void ResetValue() {
-            _step = -1;
-            _currentValue = null;
-            CurrentValue = "";
-        }
-
         public override string ToString() {
-            return base.Name + " (range)";
+            return base.TextToReplace + " (range)";
         }
     }
 }

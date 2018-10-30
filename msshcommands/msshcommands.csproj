@@ -60,6 +60,7 @@
     <Compile Include="CueTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CustomFCTBStyle.cs" />
     <Compile Include="History.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -78,17 +79,23 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Variables\ListVariable.cs" />
-    <Compile Include="Variables\RangeVariableSettings.cs">
+    <Compile Include="Variables\VariableSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Variables\RangeVariableSettings.Designer.cs">
-      <DependentUpon>RangeVariableSettings.cs</DependentUpon>
+    <Compile Include="Variables\VariableSettings.Designer.cs">
+      <DependentUpon>VariableSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Variables\ListVariableSettings.cs">
-      <SubType>Form</SubType>
+    <Compile Include="Variables\RangeVariableSettingsControl.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Variables\ListVariableSettings.Designer.cs">
-      <DependentUpon>ListVariableSettings.cs</DependentUpon>
+    <Compile Include="Variables\RangeVariableSettingsControl.Designer.cs">
+      <DependentUpon>RangeVariableSettingsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Variables\ListVariableSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Variables\ListVariableSettingsControl.Designer.cs">
+      <DependentUpon>ListVariableSettingsControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Variables\RangeVariable.cs" />
     <Compile Include="Variables\Variable.cs" />
@@ -98,7 +105,7 @@
     <Compile Include="Variables\VariableControl.Designer.cs">
       <DependentUpon>VariableControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Variables\Variables.cs" />
+    <Compile Include="Variables\VariableCollection.cs" />
     <EmbeddedResource Include="Automation.resx">
       <DependentUpon>Automation.cs</DependentUpon>
     </EmbeddedResource>
@@ -117,11 +124,14 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Variables\RangeVariableSettings.resx">
-      <DependentUpon>RangeVariableSettings.cs</DependentUpon>
+    <EmbeddedResource Include="Variables\VariableSettings.resx">
+      <DependentUpon>VariableSettings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Variables\ListVariableSettings.resx">
-      <DependentUpon>ListVariableSettings.cs</DependentUpon>
+    <EmbeddedResource Include="Variables\RangeVariableSettingsControl.resx">
+      <DependentUpon>RangeVariableSettingsControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Variables\ListVariableSettingsControl.resx">
+      <DependentUpon>ListVariableSettingsControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Variables\VariableControl.resx">
       <DependentUpon>VariableControl.cs</DependentUpon>
