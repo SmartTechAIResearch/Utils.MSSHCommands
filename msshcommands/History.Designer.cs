@@ -35,9 +35,10 @@
             this.txtFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtFilter.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtFilter.Location = new System.Drawing.Point(12, 36);
+            this.txtFilter.Location = new System.Drawing.Point(16, 44);
+            this.txtFilter.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtFilter.Name = "txtFilter";
-            this.txtFilter.Size = new System.Drawing.Size(310, 25);
+            this.txtFilter.Size = new System.Drawing.Size(412, 29);
             this.txtFilter.TabIndex = 0;
             this.txtFilter.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
             // 
@@ -45,9 +46,10 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(9, 9);
+            this.label1.Location = new System.Drawing.Point(12, 11);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(194, 16);
+            this.label1.Size = new System.Drawing.Size(249, 20);
             this.label1.TabIndex = 2;
             this.label1.Text = "Type to filter, select entry to use";
             // 
@@ -55,9 +57,10 @@
             // 
             this.btnClearHistory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClearHistory.Location = new System.Drawing.Point(11, 426);
+            this.btnClearHistory.Location = new System.Drawing.Point(15, 524);
+            this.btnClearHistory.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnClearHistory.Name = "btnClearHistory";
-            this.btnClearHistory.Size = new System.Drawing.Size(312, 23);
+            this.btnClearHistory.Size = new System.Drawing.Size(416, 28);
             this.btnClearHistory.TabIndex = 2;
             this.btnClearHistory.Text = "Clear history";
             this.btnClearHistory.UseVisualStyleBackColor = true;
@@ -72,24 +75,28 @@
             this.lbHistory.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbHistory.FormattingEnabled = true;
             this.lbHistory.ItemHeight = 18;
-            this.lbHistory.Location = new System.Drawing.Point(12, 67);
+            this.lbHistory.Items.AddRange(new object[] {
+            ""});
+            this.lbHistory.Location = new System.Drawing.Point(16, 82);
+            this.lbHistory.Margin = new System.Windows.Forms.Padding(4);
             this.lbHistory.Name = "lbHistory";
-            this.lbHistory.Size = new System.Drawing.Size(310, 357);
+            this.lbHistory.Size = new System.Drawing.Size(412, 438);
             this.lbHistory.TabIndex = 1;
             this.lbHistory.SelectedValueChanged += new System.EventHandler(this.lbHistory_SelectedValueChanged);
             // 
             // History
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(334, 461);
+            this.ClientSize = new System.Drawing.Size(445, 567);
             this.Controls.Add(this.btnClearHistory);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtFilter);
             this.Controls.Add(this.lbHistory);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(350, 500);
+            this.MinimumSize = new System.Drawing.Size(461, 605);
             this.Name = "History";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

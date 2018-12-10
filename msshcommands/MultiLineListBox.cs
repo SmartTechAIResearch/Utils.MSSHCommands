@@ -4,7 +4,6 @@ using System.Windows.Forms;
 
 namespace msshcommands {
     public class MultiLineListBox : ListBox {
-
         public MultiLineListBox() {
             DrawMode = DrawMode.OwnerDrawVariable;
         }
@@ -36,12 +35,12 @@ namespace msshcommands {
                     e.Bounds);
             }
         }
-        
+
         protected override void OnResize(EventArgs e) {
             base.OnResize(e);
 
             if (this.IsHandleCreated) {
-                object[] items = new object[Items.Count];
+                var items = new object[Items.Count];
                 Items.CopyTo(items, 0);
 
                 this.SuspendLayout();

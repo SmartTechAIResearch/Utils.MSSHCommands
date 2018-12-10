@@ -11,7 +11,7 @@ namespace msshcommands {
 
         public event EventHandler SelectedValueChanged;
 
-        public string SelectedValue { get { return lbHistory.SelectedItem.ToString(); } }
+        public string SelectedValue { get { return lbHistory.SelectedItem == null ? "" : lbHistory.SelectedItem.ToString(); } }
 
         public History() {
             InitializeComponent();
@@ -42,7 +42,7 @@ namespace msshcommands {
             else
                 foreach (string node in _commandHistory)
                     if (node.Contains(contains)) filter.Add(node);
-            
+
             lbHistory.SuspendLayout();
             lbHistory.Items.Clear();
             var h = new string[filter.Count];

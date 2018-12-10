@@ -24,6 +24,7 @@ namespace msshcommands {
     /// A small tool to send a ssh command to multiple devices at the same time.
     /// </summary>
     /// <seealso cref="System.Windows.Forms.Form" />
+
     public partial class Main : Form {
         private string _regexIPv4 = "((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
         private SynchronizationContext _synchronizationContext;
@@ -37,6 +38,23 @@ namespace msshcommands {
         private int _commandsSend;
         private Thread[] _pool;
         private ManualResetEvent _startSendCommandWaitHandle = new ManualResetEvent(false);
+
+        /// <summary>
+        /// For property binding. \n delimited.
+        /// </summary>
+        public string HistoryList {
+            get {
+                return string.Join("\n", _commandHistory);
+            }
+            set {
+                _commandHistory.Clear();
+                if (!string.IsNullOrEmpty(value)) {
+                    foreach (string s in value.Split('\n')) {
+                        _commandHistory.AddLast(s);
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Main"/> class.
@@ -61,10 +79,14 @@ namespace msshcommands {
             _cancellationTokenSource.Cancel();
             DisposeSshClients();
 
+            Properties.Settings.Default.HistoryList = HistoryList;
             Properties.Settings.Default.Save();
         }
 
-        private void Init() { _synchronizationContext = SynchronizationContext.Current; }
+        private void Init() {
+            _synchronizationContext = SynchronizationContext.Current;
+            HistoryList = Properties.Settings.Default.HistoryList;
+        }
 
         private void chkAutomation_CheckedChanged(object sender, EventArgs e) {
             chkAutomation.ForeColor = chkAutomation.Checked ? Color.Green : Color.Gray;
